@@ -68,6 +68,12 @@ cd kidrove-backend
 npm install
 ```
 
+Backend API – Base URL: https://kidrove-workshop-zv5i.onrender.com
+
+GET /api/enquiries – view all registrations
+
+POST /api/enquiry – submit a new registration
+
 Create a `.env` file inside `kidrove-backend`:
 ```
 PORT=5000
