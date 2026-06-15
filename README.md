@@ -1,6 +1,3 @@
-Here’s your **final, updated README.md** with the correct production URL (`https://kidrove-workshop-xi.vercel.app`). Copy and paste this into your `README.md` file.
-
-```markdown
 # 🤖 AI & Robotics Summer Workshop Landing Page
 
 A full‑stack landing page for Kidrove’s AI & Robotics workshop – built with **React**, **Express**, and **MongoDB**. Features dynamic animations, a real‑time countdown timer, a registration form with advanced validation, and a secure backend API.
