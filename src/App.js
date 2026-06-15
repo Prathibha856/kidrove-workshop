@@ -1,39 +1,57 @@
+import React, { useState, useEffect } from 'react';
+import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
-import WorkshopCard from './components/WorkshopCard';
-import FAQSection from './components/FAQSection';
+import WorkshopHighlights from './components/WorkshopHighlights';
+import CountdownTimer from './components/CountdownTimer';
+import AboutWorkshop from './components/AboutWorkshop';
+import WhyChoose from './components/WhyChoose';
 import LearningOutcomes from './components/LearningOutcomes';
-import RegistrationForm from './components/RegistrationForm';  // Add this
+import WeeklyRoadmap from './components/WeeklyRoadmap';
+import FAQSection from './components/FAQSection';
+import RegistrationForm from './components/RegistrationForm';
+import BackToTop from './components/BackToTop';
+import { Toaster } from 'react-hot-toast';
 import './App.css';
 
 function App() {
-  const workshopInfo = {
-    ageGroup: "8-14 Years",
-    duration: "4 Weeks",
-    mode: "Online",
-    fee: "₹2,999",
-    startDate: "15 July 2026"
-  };
+  const [darkMode, setDarkMode] = useState(false);
+  useEffect(() => {
+    if (darkMode) document.body.classList.add('dark-mode');
+    else document.body.classList.remove('dark-mode');
+  }, [darkMode]);
 
   return (
     <div className="App">
+      <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
       <HeroSection />
-      
-      <section style={{ padding: '50px', background: '#f8f9fa' }}>
-        <h2 style={{ textAlign: 'center', marginBottom: '30px' }}>
-          Workshop Details
-        </h2>
-        <WorkshopCard 
-          ageGroup={workshopInfo.ageGroup}
-          duration={workshopInfo.duration}
-          mode={workshopInfo.mode}
-          fee={workshopInfo.fee}
-          startDate={workshopInfo.startDate}
-        />
+
+      <WorkshopHighlights />
+      <CountdownTimer targetDate="2026-07-15T00:00:00" />
+      <AboutWorkshop />
+      <WhyChoose />
+      <LearningOutcomes />
+      <WeeklyRoadmap />
+      <FAQSection />
+
+      <div id="registration">
+        <RegistrationForm />
+      </div>
+
+      {/* Contact section with id for smooth scrolling */}
+      <section id="contact" style={{ padding: '40px', background: '#1a1a2e', color: 'white', textAlign: 'center' }}>
+        <h2>Contact Information</h2>
+        <p>📧 support@kidrove.com</p>
+        <p>📞 +91 98765 43210</p>
+        <p>🕒 Mon-Fri, 9 AM – 6 PM</p>
       </section>
 
-      <LearningOutcomes />
-      <FAQSection />
-      <RegistrationForm />  {/* Add this line */}
+      <footer style={{ padding: '20px', textAlign: 'center', background: '#111', color: '#aaa' }}>
+        <p>© 2026 Kidrove. All rights reserved.</p>
+        <p>📱 Facebook | Twitter | Instagram</p>
+      </footer>
+
+      <BackToTop />
+      <Toaster position="top-right" />
     </div>
   );
 }

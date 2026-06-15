@@ -1,260 +1,216 @@
-// RegistrationForm.js - Updated for students
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import toast from 'react-hot-toast';
+import { motion } from 'framer-motion';
+
+const registrationSchema = z.object({
+  studentName: z.string().min(2, 'Name must be at least 2 characters').max(50, 'Name too long'),
+  age: z.number().min(8, 'Age must be between 8 and 14').max(14, 'Age must be between 8 and 14'),
+  schoolName: z.string().min(2, 'School name is required'),
+  parentPhone: z.string().regex(/^[0-9]{10}$/, 'Enter a valid 10-digit phone number'),
+  parentEmail: z.string().email('Enter a valid email').optional().or(z.literal(''))
+});
 
 function RegistrationForm() {
-  const [formData, setFormData] = useState({
-    studentName: '',
-    age: '',
-    schoolName: '',
-    parentPhone: '',
-    parentEmail: ''  // optional
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { register, handleSubmit, formState: { errors }, reset } = useForm({
+    resolver: zodResolver(registrationSchema),
+    defaultValues: { studentName: '', age: '', schoolName: '', parentPhone: '', parentEmail: '' }
   });
 
-  const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitMessage, setSubmitMessage] = useState('');
-  const [messageType, setMessageType] = useState('');
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
-    }
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-    
-    // Student name validation
-    if (!formData.studentName.trim()) {
-      newErrors.studentName = 'Student name is required';
-    } else if (formData.studentName.length < 2) {
-      newErrors.studentName = 'Name must be at least 2 characters';
-    }
-    
-    // Age validation (8-14)
-    const ageNum = parseInt(formData.age);
-    if (!formData.age) {
-      newErrors.age = 'Age is required';
-    } else if (isNaN(ageNum) || ageNum < 8 || ageNum > 14) {
-      newErrors.age = 'Age must be between 8 and 14 years';
-    }
-    
-    // School name validation
-    if (!formData.schoolName.trim()) {
-      newErrors.schoolName = 'School name is required';
-    }
-    
-    // Parent phone validation (10 digits)
-    const phoneRegex = /^[0-9]{10}$/;
-    if (!formData.parentPhone) {
-      newErrors.parentPhone = 'Parent phone number is required';
-    } else if (!phoneRegex.test(formData.parentPhone)) {
-      newErrors.parentPhone = 'Enter valid 10-digit phone number';
-    }
-    
-    // Parent email validation (optional but if provided, must be valid)
-    if (formData.parentEmail) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(formData.parentEmail)) {
-        newErrors.parentEmail = 'Enter a valid email address';
-      }
-    }
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e) => {
-  e.preventDefault();
-  
-  if (!validateForm()) {
-    setSubmitMessage('Please fix the errors above');
-    setMessageType('error');
-    setTimeout(() => setSubmitMessage(''), 3000);
-    return;
-  }
-  
-  setIsSubmitting(true);
-  setSubmitMessage('');
-  
-  try {
-    const response = await fetch('https://kidrove-workshop-zv5i.onrender.com/api/enquiry', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData)
-    });
-    
-    const data = await response.json();
-    
-    if (response.ok) {
-      setSubmitMessage('✅ Registration successful! We will contact your parent soon.');
-      setMessageType('success');
-      setFormData({
-        studentName: '',
-        age: '',
-        schoolName: '',
-        parentPhone: '',
-        parentEmail: ''
+  const onSubmit = async (data) => {
+    setIsSubmitting(true);
+    try {
+      const response = await fetch('https://kidrove-workshop-zv5i.onrender.com/api/enquiry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
       });
-    } else {
-      if (data.errors) {
-        setErrors(data.errors);
-        setSubmitMessage('Please fix the errors below.');
+      const result = await response.json();
+      if (response.ok) {
+        toast.success('🎉 Registration successful! We will contact your parent soon.');
+        reset();
       } else {
-        setSubmitMessage(data.message || 'Registration failed. Try again.');
+        if (result.errors) Object.values(result.errors).forEach(err => toast.error(err));
+        else toast.error(result.message || 'Registration failed.');
       }
-      setMessageType('error');
+    } catch (error) {
+      toast.error('Network error. Please check your connection.');
+    } finally {
+      setIsSubmitting(false);
     }
-  } catch (error) {
-    console.error('Fetch error:', error);
-    setSubmitMessage('❌ Cannot connect to server. Make sure backend is running on port 5000.');
-    setMessageType('error');
-  } finally {
-    setIsSubmitting(false);
-    setTimeout(() => setSubmitMessage(''), 5000);
-  }
-};
+  };
 
   return (
-    <section style={{ padding: '50px', background: '#fff' }}>
-      <h2 style={{ textAlign: 'center', marginBottom: '40px' }}>
-        Student Registration Form
-      </h2>
-      <div style={{ maxWidth: '550px', margin: '0 auto', background: '#f8f9fa', padding: '30px', borderRadius: '15px', boxShadow: '0 5px 20px rgba(0,0,0,0.1)' }}>
-        
-        <form onSubmit={handleSubmit}>
+    <section style={styles.section}>
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        viewport={{ once: true }}
+        style={styles.container}
+      >
+        <h2 style={styles.title}>📝 Register Your Child</h2>
+        <p style={styles.subtitle}>Limited seats – secure your spot today!</p>
+
+        <form onSubmit={handleSubmit(onSubmit)} style={styles.form}>
           {/* Student Name */}
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
-              Student Full Name *
-            </label>
-            <input
-              type="text"
-              name="studentName"
-              value={formData.studentName}
-              onChange={handleChange}
-              placeholder="e.g., Riya Sharma"
-              style={inputStyle(errors.studentName)}
-            />
-            {errors.studentName && <ErrorMessage msg={errors.studentName} />}
+          <div style={styles.inputGroup}>
+            <label style={styles.label}>👩‍🎓 Student Full Name *</label>
+            <input type="text" {...register('studentName')} placeholder="e.g., Riya Sharma" style={inputStyle(!!errors.studentName)} />
+            {errors.studentName && <p style={styles.error}>{errors.studentName.message}</p>}
           </div>
-          
+
           {/* Age */}
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
-              Age (8-14 years) *
-            </label>
-            <input
-              type="number"
-              name="age"
-              value={formData.age}
-              onChange={handleChange}
-              placeholder="e.g., 10"
-              min="8"
-              max="14"
-              style={inputStyle(errors.age)}
-            />
-            {errors.age && <ErrorMessage msg={errors.age} />}
+          <div style={styles.inputGroup}>
+            <label style={styles.label}>🎂 Age (8-14 years) *</label>
+            <input type="number" {...register('age', { valueAsNumber: true })} placeholder="e.g., 10" style={inputStyle(!!errors.age)} />
+            {errors.age && <p style={styles.error}>{errors.age.message}</p>}
           </div>
-          
+
           {/* School Name */}
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
-              School Name *
-            </label>
-            <input
-              type="text"
-              name="schoolName"
-              value={formData.schoolName}
-              onChange={handleChange}
-              placeholder="e.g., Delhi Public School"
-              style={inputStyle(errors.schoolName)}
-            />
-            {errors.schoolName && <ErrorMessage msg={errors.schoolName} />}
+          <div style={styles.inputGroup}>
+            <label style={styles.label}>🏫 School Name *</label>
+            <input type="text" {...register('schoolName')} placeholder="e.g., Delhi Public School" style={inputStyle(!!errors.schoolName)} />
+            {errors.schoolName && <p style={styles.error}>{errors.schoolName.message}</p>}
           </div>
-          
+
           {/* Parent Phone */}
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
-              Parent/Guardian Phone *
-            </label>
-            <input
-              type="tel"
-              name="parentPhone"
-              value={formData.parentPhone}
-              onChange={handleChange}
-              placeholder="9876543210"
-              style={inputStyle(errors.parentPhone)}
-            />
-            {errors.parentPhone && <ErrorMessage msg={errors.parentPhone} />}
+          <div style={styles.inputGroup}>
+            <label style={styles.label}>📞 Parent Phone *</label>
+            <input type="tel" {...register('parentPhone')} placeholder="9876543210" style={inputStyle(!!errors.parentPhone)} />
+            {errors.parentPhone && <p style={styles.error}>{errors.parentPhone.message}</p>}
           </div>
-          
-          {/* Parent Email (Optional) */}
-          <div style={{ marginBottom: '25px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
-              Parent Email <span style={{ fontWeight: 'normal', color: '#666' }}>(Optional)</span>
-            </label>
-            <input
-              type="email"
-              name="parentEmail"
-              value={formData.parentEmail}
-              onChange={handleChange}
-              placeholder="parent@example.com"
-              style={inputStyle(errors.parentEmail)}
-            />
-            {errors.parentEmail && <ErrorMessage msg={errors.parentEmail} />}
+
+          {/* Parent Email */}
+          <div style={styles.inputGroup}>
+            <label style={styles.label}>📧 Parent Email <span style={{ fontWeight: 'normal', opacity: 0.7 }}>(Optional)</span></label>
+            <input type="email" {...register('parentEmail')} placeholder="parent@example.com" style={inputStyle(!!errors.parentEmail)} />
+            {errors.parentEmail && <p style={styles.error}>{errors.parentEmail.message}</p>}
           </div>
-          
-          <button
+
+          <motion.button
             type="submit"
             disabled={isSubmitting}
-            style={{
-              width: '100%',
-              padding: '14px',
-              background: isSubmitting ? '#ccc' : '#4CAF50',
-              color: 'white',
-              border: 'none',
-              borderRadius: '8px',
-              fontSize: '18px',
-              fontWeight: 'bold',
-              cursor: isSubmitting ? 'not-allowed' : 'pointer',
-              transition: 'background 0.3s'
-            }}
+            whileHover={!isSubmitting ? { scale: 1.02 } : {}}
+            whileTap={!isSubmitting ? { scale: 0.98 } : {}}
+            style={buttonStyle(isSubmitting)}
           >
-            {isSubmitting ? 'Registering...' : 'Register Now'}
-          </button>
-          
-          {submitMessage && (
-            <div style={{
-              marginTop: '20px',
-              padding: '12px',
-              borderRadius: '8px',
-              textAlign: 'center',
-              background: messageType === 'success' ? '#d4edda' : '#f8d7da',
-              color: messageType === 'success' ? '#155724' : '#721c24'
-            }}>
-              {submitMessage}
-            </div>
-          )}
+            {isSubmitting ? (
+              <span style={styles.spinnerWrapper}>
+                <span className="spinner"></span> Submitting...
+              </span>
+            ) : (
+              '✨ Register Now ✨'
+            )}
+          </motion.button>
         </form>
-      </div>
+      </motion.div>
+
+      <style>{`
+        .spinner {
+          display: inline-block;
+          width: 18px;
+          height: 18px;
+          border: 2px solid white;
+          border-top: 2px solid transparent;
+          border-radius: 50%;
+          animation: spin 0.8s linear infinite;
+          margin-right: 8px;
+        }
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}</style>
     </section>
   );
 }
 
-// Helper styles to reduce repetition
 const inputStyle = (hasError) => ({
   width: '100%',
-  padding: '12px',
-  border: hasError ? '2px solid #ff6b6b' : '1px solid #ddd',
-  borderRadius: '8px',
-  fontSize: '16px'
+  padding: '14px 16px',
+  fontSize: '1rem',
+  border: hasError ? '2px solid #ff6b6b' : '1px solid #e2e8f0',
+  borderRadius: '16px',
+  backgroundColor: '#fff',
+  color: '#1a1a2e',
+  transition: 'all 0.2s',
+  outline: 'none',
+  boxSizing: 'border-box',
+  fontFamily: 'inherit',
 });
 
-const ErrorMessage = ({ msg }) => (
-  <p style={{ color: '#ff6b6b', marginTop: '5px', fontSize: '14px' }}>{msg}</p>
-);
+const buttonStyle = (disabled) => ({
+  width: '100%',
+  padding: '14px',
+  background: disabled ? '#94a3b8' : '#4f46e5',
+  color: 'white',
+  border: 'none',
+  borderRadius: '40px',
+  fontSize: '1.1rem',
+  fontWeight: 'bold',
+  cursor: disabled ? 'not-allowed' : 'pointer',
+  transition: 'all 0.3s',
+  boxShadow: disabled ? 'none' : '0 6px 14px rgba(79, 70, 229, 0.3)',
+});
+
+const styles = {
+  section: {
+    padding: '60px 20px',
+    background: 'linear-gradient(145deg, #f9fafc, #eef2ff)',
+  },
+  container: {
+    maxWidth: '650px',
+    margin: '0 auto',
+    background: 'rgba(255,255,255,0.8)',
+    backdropFilter: 'blur(20px)',
+    borderRadius: '36px',
+    padding: '40px 30px',
+    boxShadow: '0 25px 45px -12px rgba(0,0,0,0.2)',
+    border: '1px solid rgba(255,255,255,0.5)',
+  },
+  title: {
+    textAlign: 'center',
+    fontSize: '2rem',
+    fontWeight: '700',
+    marginBottom: '8px',
+    color: '#1e1b4b',
+  },
+  subtitle: {
+    textAlign: 'center',
+    fontSize: '1rem',
+    color: '#4b5563',
+    marginBottom: '32px',
+  },
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '20px',
+  },
+  inputGroup: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '6px',
+  },
+  label: {
+    fontWeight: '600',
+    color: '#1f2937',
+    fontSize: '0.9rem',
+  },
+  error: {
+    color: '#ff6b6b',
+    fontSize: '0.8rem',
+    marginTop: '4px',
+  },
+  spinnerWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '8px',
+  },
+};
 
 export default RegistrationForm;

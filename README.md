@@ -1,70 +1,54 @@
-# Getting Started with Create React App
+# 🤖 AI & Robotics Summer Workshop Landing Page
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A full‑stack landing page for Kidrove’s AI & Robotics workshop – built with **React**, **Express**, and **MongoDB**. Features dynamic animations, a real‑time countdown timer, a registration form with advanced validation, and a secure backend API.
 
-## Available Scripts
+## 🌐 Live Demos
 
-In the project directory, you can run:
+- **Frontend (Vercel):** [https://kidrove-workshop.vercel.app](https://kidrove-workshop.vercel.app)  
+- **Backend API (Render):** [https://kidrove-workshop-zv5i.onrender.com](https://kidrove-workshop-zv5i.onrender.com)  
+- **GitHub Repository:** [https://github.com/Prathibha856/kidrove-workshop](https://github.com/Prathibha856/kidrove-workshop)
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## ✨ Features
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+| Section | Description |
+|---------|-------------|
+| **Hero Section** | Dynamic rotating AI thought generator, gradient title, smooth scroll‑to‑form button |
+| **Workshop Highlights** | Glass‑morphism cards (age, duration, mode, fee, start date, certificate) |
+| **Countdown Timer** | Live countdown to 15 July 2026 (days, hours, minutes, seconds) |
+| **About Workshop** | Split‑screen layout with animated stats and code‑snippet illustration |
+| **Why Choose** | Hover‑animated cards with icons and descriptions |
+| **Learning Outcomes** | Staggered grid (6 items) with emoji icons and hover effects |
+| **Weekly Roadmap** | Timeline cards with animated entry, gradient background, progress bar |
+| **FAQ Section** | Accordion with smooth open/close animations (5 FAQs) |
+| **Registration Form** | React Hook Form + Zod validation, loading spinner, toast notifications |
+| **Dark Mode Toggle** | Full site dark/light theme (persists across page) |
+| **Back to Top Button** | Appears after scrolling down |
+| **Responsive Design** | Works on desktop, tablet, and mobile |
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🛠️ Tech Stack
 
-### `npm run build`
+| Layer       | Technologies |
+|-------------|--------------|
+| **Frontend** | React, Framer Motion, React Hook Form, Zod, React Hot Toast |
+| **Backend**  | Node.js, Express.js, Mongoose, express‑rate‑limit, cors, dotenv |
+| **Database** | MongoDB Atlas |
+| **Deployment** | Vercel (frontend), Render (backend) |
+| **Version Control** | Git & GitHub |
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 📦 Local Setup
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Prerequisites
+- Node.js (v18 or higher)
+- npm or yarn
+- MongoDB Atlas account (or local MongoDB)
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### 1. Clone the repository
+```bash
+git clone https://github.com/Prathibha856/kidrove-workshop.git
+cd kidrove-workshop
