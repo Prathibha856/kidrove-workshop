@@ -36,3 +36,9 @@
     transform: rotate(360deg);
   }
 }
+body {
+  background: purple;
+  color: white;
+  text-align: center;
+  font-family: Arial;
+}
