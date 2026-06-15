@@ -126,5 +126,6 @@ This project is for educational / internship submission purposes only.
 - Kidrove for the design inspiration
 - React, Three.js, Framer Motion communities
 - Vercel & Render for free hosting
-
-```
+- MongoDB Atlas for cloud database
+- Nodemailer for email confirmations
+- GitHub Actions for CI/CD
