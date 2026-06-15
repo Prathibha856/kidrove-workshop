@@ -1,11 +1,13 @@
+Here’s your **final, updated README.md** with the correct production URL (`https://kidrove-workshop-xi.vercel.app`). Copy and paste this into your `README.md` file.
 
+```markdown
 # 🤖 AI & Robotics Summer Workshop Landing Page
 
 A full‑stack landing page for Kidrove’s AI & Robotics workshop – built with **React**, **Express**, and **MongoDB**. Features dynamic animations, a real‑time countdown timer, a registration form with advanced validation, and a secure backend API.
 
 ## 🌐 Live Demos
 
-- **Frontend (Vercel):** [https://kidrove-workshop.vercel.app](https://kidrove-workshop.vercel.app)  
+- **Frontend (Vercel):** [https://kidrove-workshop-xi.vercel.app](https://kidrove-workshop-xi.vercel.app)  
 - **Backend API (Render):** [https://kidrove-workshop-zv5i.onrender.com](https://kidrove-workshop-zv5i.onrender.com)  
 - **GitHub Repository:** [https://github.com/Prathibha856/kidrove-workshop](https://github.com/Prathibha856/kidrove-workshop)
 
@@ -126,6 +128,3 @@ This project is for educational / internship submission purposes only.
 - Kidrove for the design inspiration
 - React, Three.js, Framer Motion communities
 - Vercel & Render for free hosting
-- MongoDB Atlas for cloud database
-- Nodemailer for email confirmations
-- GitHub Actions for CI/CD
